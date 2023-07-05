@@ -47,12 +47,15 @@ public class RopeController : MonoBehaviour
             part.transform.eulerAngles = sectionRotation;
             part.name = $"{sectionName}{i + 1}";
 
-            FixedJoint partJoint = part.GetComponent<FixedJoint>();
+            HingeJoint partJoint = part.GetComponent<HingeJoint>();
 
             if (i == 0)
             {
+
                 //Destroy(part.GetComponent<CharacterJoint>());
                 partJoint.connectedBody = firstSnapTo.transform.GetComponent<Rigidbody>();
+                //part.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+
             }
             else
             {
@@ -61,7 +64,8 @@ public class RopeController : MonoBehaviour
 
             if (i == count - 1)
             {
-                partJoint.connectedBody = lastSnapTo.transform.GetComponent<Rigidbody>();
+                //partJoint.connectedBody = lastSnapTo.transform.GetComponent<Rigidbody>();
+                //partJoint.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             }
 
             previousSection = part;
