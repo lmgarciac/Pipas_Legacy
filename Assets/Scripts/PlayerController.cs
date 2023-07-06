@@ -16,28 +16,48 @@ public class PlayerController : MonoBehaviour
     private Animator characterAnimator;
     private Animator dogAnimator;
 
-    public event Action<float> OnPlayerMovement;
-    //Rigidbody rb;
+    private Rigidbody characterRb;
+    private Rigidbody dogRb;
 
-    
+    public event Action<float> OnPlayerMovement;   
+   
     void Start()
     {
         characterAnimator = character.GetComponent<Animator>();
         dogAnimator = dog.GetComponent<Animator>();
 
-        //rb = GetComponent<Rigidbody>();
+        characterRb = character.GetComponent<Rigidbody>();
+        dogRb = dog.GetComponent<Rigidbody>();
+
     }
+
 
     void Update()
     {
         ControlPlayer();
     }
 
+    private void FixedUpdate()
+    {
+        CharacterMove();
+    }
+
+    private void CharacterMove()
+    {
+        characterRb.velocity = Vector3.forward;
+        dogRb.velocity = Vector3.forward;
+
+        //Vector3 movement = Vector3.forward * 1f;
+        //characterRb.MovePosition(characterRb.position + movement * Time.deltaTime);
+        //dogRb.MovePosition(dogRb.position + movement * Time.deltaTime);
+        //this.transform.position = characterRb.position;
+    }
+
     private void ControlPlayer()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-            OnPlayerMovement?.Invoke(-1);
         if (Input.GetKeyDown(KeyCode.D))
+            OnPlayerMovement?.Invoke(-1);
+        if (Input.GetKeyDown(KeyCode.A))
             OnPlayerMovement?.Invoke(1);
     }
 

@@ -45,18 +45,23 @@ public class GameController : MonoBehaviour
     }
 
     private void SwitchLanes(float value)
-    {      
+    {   
+        
         if (value < 0 && currentLaneIndex > 0)
         {
             currentLaneIndex--;
             currentLane = lanes[currentLaneIndex];
-            playerGameObject.transform.position = currentLane.transform.position;
+            playerGameObject.transform.position = new Vector3(currentLane.transform.position.x, 
+                                                              currentLane.transform.position.y, 
+                                                              playerGameObject.transform.position.z);
         }
         else if (value > 0 && currentLaneIndex < lanes.Length - 1)
         {
             currentLaneIndex++;
             currentLane = lanes[currentLaneIndex];
-            playerGameObject.transform.position = currentLane.transform.position;
+            playerGameObject.transform.position = new Vector3(currentLane.transform.position.x,
+                                                              currentLane.transform.position.y,
+                                                              playerGameObject.transform.position.z);
         }
     }
 }
