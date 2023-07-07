@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineColor: {r: 1, g: 0, b: 0, a: 1}
   laneTransform: {fileID: 6212208812575032823}
+  spawnPointPrefab: {fileID: 2949192934404149671, guid: 25c27d95934967341951be6943994e5c, type: 3}
   startPoint: {fileID: 2376438967920736431}
 --- !u!1 &2728694163703124582
 GameObject:
@@ -142,7 +143,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0cda7319e1a92ce468dcd0e90b39104d, type: 2}
+  - {fileID: 2100000, guid: 2455a030135eea34ab056103eb028ed3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

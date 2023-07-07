@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] GameObject character;
-    [SerializeField] GameObject dog;
+    public GameObject character;
+    public GameObject dog;
 
     //public float movementSpeed = 3;
     //public float jumpForce = 300;
@@ -19,8 +19,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody characterRb;
     private Rigidbody dogRb;
 
-    public event Action<float> OnPlayerMovement;   
-   
+    public event Action<float> OnPlayerMovement;
+
     void Start()
     {
         characterAnimator = character.GetComponent<Animator>();
@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviour
 
         characterRb = character.GetComponent<Rigidbody>();
         dogRb = dog.GetComponent<Rigidbody>();
-
     }
 
 
@@ -50,7 +49,6 @@ public class PlayerController : MonoBehaviour
         //Vector3 movement = Vector3.forward * 1f;
         //characterRb.MovePosition(characterRb.position + movement * Time.deltaTime);
         //dogRb.MovePosition(dogRb.position + movement * Time.deltaTime);
-        //this.transform.position = characterRb.position;
     }
 
     private void ControlPlayer()

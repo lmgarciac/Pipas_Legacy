@@ -37,9 +37,11 @@ public class GameController : MonoBehaviour
 
 
         playerGameObject = Instantiate(playerPrefab, currentLane.startPoint.position, Quaternion.identity);
-        cameraBehavior.player = playerGameObject;
 
         playerController = playerGameObject.GetComponent<PlayerController>();
+
+        cameraBehavior.player = playerController.character;
+
         playerController.OnPlayerMovement += SwitchLanes;
 
     }
