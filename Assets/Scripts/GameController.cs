@@ -17,6 +17,8 @@ public class GameController : MonoBehaviour
     private LaneController currentLane;
     private int currentLaneIndex;
 
+    private bool switchingLanes = false;
+
     private void Awake()
     {
 
@@ -47,23 +49,53 @@ public class GameController : MonoBehaviour
     }
 
     private void SwitchLanes(float value)
-    {   
-        
-        if (value < 0 && currentLaneIndex > 0)
+    {          
+        if (value < 0 && currentLaneIndex > 0 && !switchingLanes)
+        {
+            switchingLanes = true;
+            StartCoroutine(SwitchLanesLerp(true, lanes[currentLaneIndex - 1].transform.position.x, 0.2f));
+        }
+        else if (value > 0 && currentLaneIndex < lanes.Length - 1 && !switchingLanes)
+        {
+            switchingLanes = true;
+            StartCoroutine(SwitchLanesLerp(false, lanes[currentLaneIndex + 1].transform.position.x, 0.2f));
+        }
+    }
+
+    private IEnumerator SwitchLanesLerp(bool switchLeft, float targetPosition, float duration)
+    {
+        float elapsedTime = 0f;
+        float initialPosition = playerGameObject.transform.position.x;
+        float lerpValue = initialPosition;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / duration);
+            lerpValue = Mathf.Lerp(initialPosition, targetPosition, t);
+
+            Debug.Log($"CurrentPosition = {lerpValue}");
+
+            playerGameObject.transform.position = new Vector3(lerpValue,
+                                                  playerGameObject.transform.position.y,
+                                                  playerGameObject.transform.position.z);
+            yield return null;
+        }
+
+        Debug.Log("Finalizado");
+
+        if (switchLeft)
         {
             currentLaneIndex--;
-            currentLane = lanes[currentLaneIndex];
-            playerGameObject.transform.position = new Vector3(currentLane.transform.position.x, 
-                                                              currentLane.transform.position.y, 
-                                                              playerGameObject.transform.position.z);
         }
-        else if (value > 0 && currentLaneIndex < lanes.Length - 1)
+        else
         {
             currentLaneIndex++;
-            currentLane = lanes[currentLaneIndex];
-            playerGameObject.transform.position = new Vector3(currentLane.transform.position.x,
-                                                              currentLane.transform.position.y,
-                                                              playerGameObject.transform.position.z);
         }
+
+        currentLane = lanes[currentLaneIndex];
+        switchingLanes = false;
+
+        yield return null;
     }
 }

@@ -9,9 +9,8 @@ public class LaneController : MonoBehaviour
 
     public Transform startPoint;
 
-    private int spawnPointAmount;
-
-    private List<Transform> spawnPoints = new List<Transform>();
+    private List<Transform> spawnPointTransforms = new List<Transform>();
+    private Dictionary<int, SpawnPointPrefabs> interactables = new Dictionary<int, SpawnPointPrefabs>();
 
     //Plane Components
     private MeshFilter meshFilter;
@@ -19,6 +18,8 @@ public class LaneController : MonoBehaviour
     private Bounds meshBounds;
     private Vector3 planeCenter;
     private Vector3 planeSize;
+
+    private int obstacleOffset = 4;
 
 
     private void Start()
@@ -30,21 +31,37 @@ public class LaneController : MonoBehaviour
         planeSize = new Vector3(meshBounds.size.x * laneTransform.localScale.x, 0f, meshBounds.size.z * laneTransform.localScale.z);
 
         InitSpawnPoints();
+
+        SpawnInteractables();
+    }
+
+    private void SpawnInteractables()
+    {
+        foreach (var spawnPointTransform in spawnPointTransforms)
+        {
+            SpawnPoint spawnPoint = new SpawnPoint();
+
+            if (spawnPointTransform.TryGetComponent<SpawnPoint>(out spawnPoint))
+                spawnPoint.SpawnRandomElement();
+        }    
     }
 
     private void InitSpawnPoints()
     {
         Bounds meshBounds = meshFilter.sharedMesh.bounds;
         planeSize = new Vector3(meshBounds.size.x * laneTransform.localScale.x, 0f, meshBounds.size.z * laneTransform.localScale.z);
+        int laneLenght = (int)Mathf.Floor(planeSize.z) - obstacleOffset*2;
 
-        spawnPointAmount = Random.Range(0, 5);
+        int halfLaneLenght = (int) (laneLenght * 0.5f);
+        int spawnPointAmount = Random.Range(0, 5);
 
-        for (int i = 0; i < spawnPointAmount; i++)
+        List<int> randomPositions = MathUtilities.GetUniqueRandomIntegerList(-halfLaneLenght,halfLaneLenght,spawnPointAmount);
+
+        foreach (var position in randomPositions)
         {
-            int spawnPointPosition = Random.Range((int)(-planeSize.z * 0.5f), (int)(planeSize.z * 0.5f));
             Transform spawnPoint = Instantiate(spawnPointPrefab, this.transform);
-            spawnPoint.position = new Vector3(transform.position.x, transform.position.y, spawnPointPosition);
-            spawnPoints.Add(spawnPoint);
+            spawnPoint.position = new Vector3(transform.position.x, transform.position.y, position);
+            spawnPointTransforms.Add(spawnPoint);
         }
     }
 
@@ -78,7 +95,7 @@ public class LaneController : MonoBehaviour
             Gizmos.DrawLine(points[i], points[(i + 1) % 4]);
         }
 
-        foreach (Transform spawnPoint in spawnPoints)
+        foreach (Transform spawnPoint in spawnPointTransforms)
         {
             Gizmos.color = new Color(1, 0, 0, 0.5f);
             Gizmos.DrawCube(spawnPoint.position, new Vector3(0.5f, 0.5f, 0.5f));

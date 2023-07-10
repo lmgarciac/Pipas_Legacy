@@ -6,7 +6,7 @@ public class SpawnPoint : MonoBehaviour
 {
     [SerializeField] private List<SpawnPointPrefabs> prefabList = new List<SpawnPointPrefabs>();
 
-    void Start()
+    public void SpawnRandomElement()
     {
         if (prefabList.Count == 0)
             return;
@@ -16,17 +16,17 @@ public class SpawnPoint : MonoBehaviour
 
         Instantiate(element, transform);
     }
+}
 
-    [System.Serializable]
-    public class SpawnPointPrefabs
-    {
-        public SpawnPointElementType type;
-        public GameObject prefab;
-    }
+[System.Serializable]
+public class SpawnPointPrefabs
+{
+    public SpawnPointElementType type;
+    public GameObject prefab;
+}
 
-    public enum SpawnPointElementType
-    {
-        Poop = 0,
-        Trash
-    }
+public enum SpawnPointElementType
+{
+    Poop = 0,
+    Trash
 }
