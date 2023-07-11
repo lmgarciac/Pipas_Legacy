@@ -5,7 +5,7 @@ public static class MathUtilities
 {
     public static List<int> GetUniqueRandomIntegerList(int min, int max, int listLength)
     {
-        Debug.Log($"Generate random list in range {min} to {max} with length {listLength}");
+        //Debug.Log($"Generate random list in range {min} to {max} with length {listLength}");
 
         List<int> result = new List<int>();
 
@@ -32,7 +32,7 @@ public static class MathUtilities
 
         for (int i = 0; i < listLength; i++)
         {
-            Debug.Log($"{i} Number is {sequentialList[i]}");
+            //Debug.Log($"{i} Number is {sequentialList[i]}");
             result.Add(sequentialList[i]);
         }
 

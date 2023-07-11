@@ -42,10 +42,9 @@ public class GameController : MonoBehaviour
 
         playerController = playerGameObject.GetComponent<PlayerController>();
 
-        cameraBehavior.player = playerController.character;
+        cameraBehavior.player = playerController.dog;
 
         playerController.OnPlayerMovement += SwitchLanes;
-
     }
 
     private void SwitchLanes(float value)
@@ -74,7 +73,7 @@ public class GameController : MonoBehaviour
             float t = Mathf.Clamp01(elapsedTime / duration);
             lerpValue = Mathf.Lerp(initialPosition, targetPosition, t);
 
-            Debug.Log($"CurrentPosition = {lerpValue}");
+            //Debug.Log($"CurrentPosition = {lerpValue}");
 
             playerGameObject.transform.position = new Vector3(lerpValue,
                                                   playerGameObject.transform.position.y,
@@ -82,7 +81,7 @@ public class GameController : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("Finalizado");
+        //Debug.Log("Finalizado");
 
         if (switchLeft)
         {

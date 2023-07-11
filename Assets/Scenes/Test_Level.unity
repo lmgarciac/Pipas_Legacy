@@ -263,7 +263,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: {fileID: 1698357337}
   sectionPrefab: {fileID: 8387500619463160931, guid: ca72ae5e4e13c2e4aa6a5e620254c0d1, type: 3}
-  playerPrefab: {fileID: 8664214579043401886, guid: c70cba757be0393429e20bfdf3ab3bb2, type: 3}
+  playerPrefab: {fileID: 8664214579043401886, guid: 6f9ff9a229c08ab4da42f4953af51719, type: 3}
   cameraBehavior: {fileID: 1680092505}
 --- !u!1 &1680092501
 GameObject:

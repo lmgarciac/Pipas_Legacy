@@ -8,11 +8,13 @@ public class PlayerController : MonoBehaviour
     public GameObject character;
     public GameObject dog;
 
-    //public float movementSpeed = 3;
-    //public float jumpForce = 300;
-    //public float timeBeforeNextJump = 1.2f;
+    [Header ("Player parameters")]
+    [SerializeField] private float movementSpeed = 3f;
+    [SerializeField] private float jumpForce = 50f;
+    [SerializeField] private float groundRaycastDistance = 0.05f;
+    [SerializeField] private float upwardGravityMultiplier = 1f;
+    [SerializeField] private float fallingGravityMultiplier = 2f;
 
-    //private float canJump = 0f;
     private Animator characterAnimator;
     private Animator dogAnimator;
 
@@ -21,30 +23,43 @@ public class PlayerController : MonoBehaviour
 
     public event Action<float> OnPlayerMovement;
 
+
+    private bool isJumping = false;
+    private bool isFalling = false;
+
     void Start()
     {
-        characterAnimator = character.GetComponent<Animator>();
-        dogAnimator = dog.GetComponent<Animator>();
+        if (character != null)
+        {
+            characterAnimator = character.GetComponent<Animator>();
+            characterRb = character.GetComponent<Rigidbody>();
+        }
 
-        characterRb = character.GetComponent<Rigidbody>();
-        dogRb = dog.GetComponent<Rigidbody>();
+        if (dog != null)
+        {
+            dogAnimator = dog.GetComponent<Animator>();
+            dogRb = dog.GetComponent<Rigidbody>();
+        }
     }
 
 
     void Update()
     {
         ControlPlayer();
+        CharacterMoveTranslate();
     }
 
-    private void FixedUpdate()
+
+    private void CharacterMoveTranslate()
     {
-        CharacterMove();
+        dog.transform.Translate(Vector3.forward * movementSpeed * Time.deltaTime);
     }
 
     private void CharacterMove()
     {
-        characterRb.velocity = Vector3.forward;
-        dogRb.velocity = Vector3.forward;
+        //characterRb.velocity = Vector3.forward;
+        dogRb.velocity = new Vector3(dogRb.velocity.x, dogRb.velocity.y, movementSpeed);
+
 
         //Vector3 movement = Vector3.forward * 1f;
         //characterRb.MovePosition(characterRb.position + movement * Time.deltaTime);
@@ -57,6 +72,18 @@ public class PlayerController : MonoBehaviour
             OnPlayerMovement?.Invoke(-1);
         if (Input.GetKeyDown(KeyCode.A))
             OnPlayerMovement?.Invoke(1);
+        if (IsGrounded() && Input.GetKeyDown(KeyCode.Space))
+        {
+            isFalling = false;
+
+            isJumping = true;
+            Jump();
+        }
+    }
+
+    private void Jump()
+    {
+        dogRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     //void ControllPlayer()
@@ -84,4 +111,40 @@ public class PlayerController : MonoBehaviour
     //            anim.SetTrigger("jump");
     //    }
     //}
+
+    private void FixedUpdate()
+    {
+        //CharacterMove();
+
+        if (isJumping && dogRb.velocity.y < 0f)
+        {
+            // Player is falling after reaching the peak of the jump
+            isJumping = false;
+            isFalling = true;
+        }
+
+        if (isFalling)
+        {
+            // Apply custom gravity while falling
+            dogRb.AddForce(Physics.gravity * fallingGravityMultiplier, ForceMode.Acceleration);
+        }
+        else
+        {
+            // Apply custom gravity while not jumping or falling
+            dogRb.AddForce(Physics.gravity * upwardGravityMultiplier, ForceMode.Acceleration);
+        }
+    }
+
+    private bool IsGrounded()
+    {
+        // Perform a raycast downwards to check if the player is on the ground
+        return Physics.Raycast(dog.transform.position, -Vector3.up, groundRaycastDistance);
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Draw a Gizmo to visualize the ground detection raycast
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(dog.transform.position, dog.transform.position - dog.transform.up * groundRaycastDistance);
+    }
 }
